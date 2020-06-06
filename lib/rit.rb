@@ -16,10 +16,10 @@ module Rit
     option :path, desc: 'Where to create the repository.'
     def init
       path = Pathname(options[:path] || '.')
-      rerun = path.exist?
+      re_init = !Repository.load(path).nil?
 
       repository = Repository.create!(path)
-      if rerun
+      if re_init
         puts "Reinitialized existing Git repository in #{repository.worktree_path.expand_path}"
       else
         puts "Initialized empty Git repository in #{repository.worktree_path.expand_path}"
