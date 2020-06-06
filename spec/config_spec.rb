@@ -12,31 +12,16 @@ RSpec.describe Rit::Config do
     FileUtils.touch(CONFIG_PATH)
   end
 
-  context 'when existing empty file' do
-    let(:config) { Rit::Config.find!(CONFIG_PATH) }
-
-    describe '.find!' do
+  describe '.load' do
+    context 'when load empty file' do
+      let(:config) { Rit::Config.load(CONFIG_PATH) }
       it 'sections.count should_eq 0' do
         expect(config.inifile.sections.count).to eq 0
       end
     end
 
-    describe '#write' do
-      context 'when set testvalue to config' do
-        before do
-          config.set('test', 'testvalue', 10)
-          config.write
-        end
-
-        it 'testvalue should_eq 10' do
-          expect(Rit::Config.find!(CONFIG_PATH).inifile['test']['testvalue']).to eq 10
-        end
-      end
-    end
-  end
-
-  context 'when existing config file' do
-    let(:config) do
+    context 'when load config file' do
+      let(:config) do
         ini = <<-EOS
         [core]
 	    repositoryformatversion = 0
@@ -51,25 +36,25 @@ RSpec.describe Rit::Config do
         EOS
 
         File.write(CONFIG_PATH, ini)
-        config = Rit::Config.find!(CONFIG_PATH)
-    end
+        Rit::Config.load(CONFIG_PATH)
+      end
 
-    describe '.find!' do
       it 'sections.count should_eq 2' do
          expect(config.inifile.sections.count).to eq 2
       end
     end
+  end
 
-    describe '#write' do
-      context 'when set testvalue to config' do
-        before do
-          config.set('test', 'testvalue', 10)
-          config.write
-        end
+  describe '#write' do
+    context 'when set testvalue to config' do
+      let(:config) { Rit::Config.load(CONFIG_PATH) }
+      before do
+        config.set('test', 'testvalue', 10)
+        config.write
+      end
 
-        it 'testvalue should_eq 10' do
-          expect(Rit::Config.find!(CONFIG_PATH).inifile['test']['testvalue']).to eq 10
-        end
+      it 'testvalue should_eq 10' do
+        expect(Rit::Config.load(CONFIG_PATH).inifile['test']['testvalue']).to eq 10
       end
     end
   end
