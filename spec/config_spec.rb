@@ -46,15 +46,15 @@ RSpec.describe Rit::Config do
   end
 
   describe '#write' do
-    context 'when set testvalue to config' do
+    context 'when set test_value to config' do
       let(:config) { Rit::Config.load(CONFIG_PATH) }
       before do
-        config.set('test', 'testvalue', 10)
+        config.set('test', 'test_value', 10)
         config.write
       end
 
       it 'testvalue should_eq 10' do
-        expect(Rit::Config.load(CONFIG_PATH).inifile['test']['testvalue']).to eq 10
+        expect(Rit::Config.load(CONFIG_PATH).inifile['test']['test_value']).to eq 10
       end
     end
   end
