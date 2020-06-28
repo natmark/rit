@@ -39,6 +39,11 @@ module Rit
       Repository.new(worktree_path)
     end
 
+    def self.find(target_path = Pathname.pwd)
+      worktree_path = target_path.ascend.find { |p| p.join(".git").directory? }
+      Repository.new(worktree_path) unless worktree_path.nil?
+    end
+
     def self.load(worktree_path)
       Repository.new(worktree_path) if worktree_path.exist?
     end
